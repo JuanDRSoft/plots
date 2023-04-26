@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { commercialPlotsData, residentialPlotsData } from "../data";
 
 function App() {
   const [residentialPlots, setResidentialPlots] = useState([]);
@@ -8,45 +9,36 @@ function App() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const getPlots = async () => {
-      try {
-        setLoading(true);
-        const url = "http://localhost:3004/residentialPlots";
+  // useEffect(() => {
+  //   const getPlots = async () => {
+  //     try {
+  //       setLoading(true);
 
-        const respuesta = await fetch(url);
-        const resultado = await respuesta.json();
+  //       setResidentialPlots(residentialPlotsData);
+  //       setPlot(residentialPlotsData);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getPlots();
 
-        setResidentialPlots(resultado);
-        setPlot(resultado);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getPlots();
-
-    const getCommercialPlots = async () => {
-      try {
-        const url = "http://localhost:3004/commercialPlots";
-
-        const respuesta = await fetch(url);
-        const resultado = await respuesta.json();
-
-        setCommercialPlots(resultado);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getCommercialPlots();
-  }, []);
+  //   const getCommercialPlots = async () => {
+  //     try {
+  //       setCommercialPlots(commercialPlotsData);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getCommercialPlots();
+  // }, []);
 
   useEffect(() => {
     setLoading(true);
     if (select === "Residential Plots") {
-      const filter = residentialPlots.filter((e) => e.plotNo == search);
+      const filter = residentialPlotsData.filter((e) => e.plotNo == search);
       if (filter.length === 0) {
-        setPlot(residentialPlots);
+        setPlot(residentialPlotsData);
         setLoading(false);
       } else {
         setPlot(filter);
@@ -56,9 +48,9 @@ function App() {
 
     if (select === "Commercial Plots") {
       setLoading(true);
-      const filter = commercialPlots.filter((e) => e.plotNo == search);
+      const filter = commercialPlotsData.filter((e) => e.plotNo == search);
       if (filter.length === 0) {
-        setPlot(commercialPlots);
+        setPlot(commercialPlotsData);
         setLoading(false);
       } else {
         setPlot(filter);
