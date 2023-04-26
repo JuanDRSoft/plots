@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+table th{
+    width: 9.8%;
+    text-align: start;
+}
+
+table td {
+    width: 10%;
+    text-align: start;
+}
