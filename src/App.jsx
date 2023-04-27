@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { commercialPlotsData, residentialPlotsData } from "../data";
 
+export const block = ["Exective Block", "Block A", "Block B", "Block C"];
+
 function App() {
   const [residentialPlots, setResidentialPlots] = useState([]);
   const [commercialPlots, setCommercialPlots] = useState([]);
   const [plot, setPlot] = useState([]);
   const [select, setSelect] = useState("Residential Plots");
+  const [selectBlock, setSelectBlock] = useState("Exective Block");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -16,10 +19,7 @@ function App() {
 
     if (select === "Residential Plots") {
       const filter = residentialPlotsData.filter(
-        (e) =>
-          e.plotNo == search ||
-          e.block.toLowerCase().replace(/\s+/g, "") ==
-            search.toLowerCase().replace(/\s+/g, "")
+        (e) => e.plotNo == search && e.block == selectBlock
       );
       setPlot(filter);
     }
@@ -53,9 +53,19 @@ function App() {
           >
             Search
           </button>
+
           <select onChange={(e) => setSelect(e.target.value)} value={select}>
             <option>Residential Plots</option>
             <option>Commercial Plots</option>
+          </select>
+
+          <select
+            onChange={(e) => setSelectBlock(e.target.value)}
+            value={selectBlock}
+          >
+            {block.map((e) => (
+              <option>{e}</option>
+            ))}
           </select>
         </div>
 
