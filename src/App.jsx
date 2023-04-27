@@ -19,14 +19,15 @@ function App() {
 
     if (select === "Residential Plots") {
       const filter = residentialPlotsData.filter(
-        (e) => e.plotNo == search && e.block == selectBlock
+        (e) => e.plotNo == search && e.block.includes(selectBlock)
       );
       setPlot(filter);
     }
 
     if (select === "Commercial Plots") {
-      setLoading(true);
-      const filter = commercialPlotsData.filter((e) => e.plotNo == search);
+      const filter = commercialPlotsData.filter(
+        (e) => e.plotNo == search && e.block.includes(selectBlock)
+      );
       setPlot(filter);
     }
   };
