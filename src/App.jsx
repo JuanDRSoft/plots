@@ -9,55 +9,27 @@ function App() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const getPlots = async () => {
-  //     try {
-  //       setLoading(true);
+  const onSearch = () => {
+    if ([search, select].includes("")) {
+      return;
+    }
 
-  //       setResidentialPlots(residentialPlotsData);
-  //       setPlot(residentialPlotsData);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getPlots();
-
-  //   const getCommercialPlots = async () => {
-  //     try {
-  //       setCommercialPlots(commercialPlotsData);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getCommercialPlots();
-  // }, []);
-
-  useEffect(() => {
-    setLoading(true);
     if (select === "Residential Plots") {
-      const filter = residentialPlotsData.filter((e) => e.plotNo == search);
-      if (filter.length === 0) {
-        setPlot(residentialPlotsData);
-        setLoading(false);
-      } else {
-        setPlot(filter);
-        setLoading(false);
-      }
+      const filter = residentialPlotsData.filter(
+        (e) =>
+          e.plotNo == search ||
+          e.block.toLowerCase().replace(/\s+/g, "") ==
+            search.toLowerCase().replace(/\s+/g, "")
+      );
+      setPlot(filter);
     }
 
     if (select === "Commercial Plots") {
       setLoading(true);
       const filter = commercialPlotsData.filter((e) => e.plotNo == search);
-      if (filter.length === 0) {
-        setPlot(commercialPlotsData);
-        setLoading(false);
-      } else {
-        setPlot(filter);
-        setLoading(false);
-      }
+      setPlot(filter);
     }
-  }, [select, search]);
+  };
 
   return (
     <div className="bg-gray-100 w-full h-full">
@@ -74,6 +46,13 @@ function App() {
             onChange={(e) => setSearch(e.target.value)}
             value={search}
           />
+
+          <button
+            className="bg-blue-700 text-white p-1 ml-5 rounded-md mr-5"
+            onClick={onSearch}
+          >
+            Search
+          </button>
           <select onChange={(e) => setSelect(e.target.value)} value={select}>
             <option>Residential Plots</option>
             <option>Commercial Plots</option>
@@ -81,62 +60,20 @@ function App() {
         </div>
 
         <div className="mt-5">
-          <div className="bg-white p-5 rounded-md shadow">
-            <table className="mb-2">
-              <tr>
-                <th>Plot No.</th>
-                <th>Block</th>
-                <th>Size</th>
-                <th>Status</th>
-                <th>Corner</th>
-                <th>Extra Land</th>
-                <th>Marlas</th>
-                <th>Main Double Road</th>
-                <th>Filling/Solid Land</th>
-                <th>Street No</th>
-                <th>Notes</th>
-              </tr>
-            </table>
-          </div>
-
-          <div className="overflow-y-scroll h-96 bg-white p-5 rounded-md shadow mt-5">
-            {loading ? (
-              <div className="w-full h-full flex justify-center items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="text-gray-200 text-center animate-spin h-20 w-20 mr-3"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-                  />
-                </svg>
-              </div>
-            ) : (
-              <table>
-                {plot.map((e) => (
-                  <tr>
-                    <td className="text-center pr-7">{e.plotNo}</td>
-                    <td>{e.block}</td>
-                    <td>{e.size}</td>
-                    <td>{e.status}</td>
-                    <td>{e.corner}</td>
-                    <td>{e.extraLand}</td>
-                    <td>{e.marlas}</td>
-                    <td>{e.mainDoubleRoad}</td>
-                    <td>{e.filling}</td>
-                    <td>{e.streetNo}</td>
-                    <td>{e.notes}</td>
-                  </tr>
-                ))}
-              </table>
-            )}
-          </div>
+          {plot.map((e) => (
+            <div className="bg-white mb-2 rounded-md shadow p-5 flex justify-between">
+              <h1>Plot No. {e.plotNo}</h1>
+              <p>{e.block}</p>
+              <p>Size: {e.size}</p>
+              <p>Status: {e.status}</p>
+              <p>Corner: {e.corner}</p>
+              <p>Extra Land: {e.extraland}</p>
+              <p>Marlas: {e.marlas}</p>
+              <p>Main Double Rain: {e.mainDoubleRoad}</p>
+              <p>filling: {e.filling}</p>
+              <p>Street No:{e.streetNo}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
