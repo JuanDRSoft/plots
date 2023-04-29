@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { commercialPlotsData, residentialPlotsData } from "../data";
+import Fondo from "../src/img/fondo.png";
 
 export const block = ["Exective Block", "Block A", "Block B", "Block C"];
 
@@ -34,7 +35,7 @@ function App() {
 
   return (
     <div className="w-full h-full">
-      <img src="src/img/fondo.png" class="fixed -z-10 w-full h-screen top-0" />
+      <img src={Fondo} class="fixed -z-10 w-full h-screen top-0" />
       <div className="flex">
         <div className="bg-glass p-10 rounded-md shadow  w-1/2 h-screen flex items-center">
           <div className="w-full justify-center">
