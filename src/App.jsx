@@ -35,17 +35,17 @@ function App() {
 
   return (
     <div className="w-full h-full">
-      <img src={Fondo} class="fixed -z-10 w-full h-screen top-0" />
-      <div className="flex">
-        <div className="bg-glass p-10 rounded-md shadow  w-1/2 h-screen flex items-center">
+      <img src={Fondo} class="fixed -z-10 md:w-full w-screen h-screen top-0" />
+      <div className="md:flex">
+        <div className="bg-glass md:p-10 rounded-md shadow  md:w-1/2 md:h-screen md:flex items-center">
           <div className="w-full justify-center">
-            <h1 className="text-7xl mb-24 font-semibold text-center">
+            <h1 className="text-7xl md:mb-24 font-semibold text-center mb-10 pt-10 md:pt-0">
               Find Your Plot
             </h1>
-            <div className="flex justify-center">
+            <div className="md:flex justify-center md:p-0 p-5">
               <input
                 type="number"
-                className="border-t border-l border-b rounded-l-md bg-gray-50 border-blue-700 outline-none pl-3"
+                className="md:border-t md:border-l md:border-b rounded-l-md md:rounded-r-none rounded-r-md border bg-gray-50 border-blue-700 outline-none pl-3 w-full p-2 md:p-0"
                 onChange={(e) => setSearch(e.target.value)}
                 value={search}
                 placeholder="Enter your Plot No."
@@ -54,7 +54,7 @@ function App() {
               <select
                 onChange={(e) => setSelect(e.target.value)}
                 value={select}
-                className="bg-gray-50 border-blue-700 border-t border-l border-b"
+                className="bg-gray-50 border-blue-700 border-t border-l border-b w-1/2 md:w-52 rounded-l-md md:mt-0 mt-3 md:rounded-l-none p-3 md:p-0"
               >
                 <option>Residential Plots</option>
                 <option>Commercial Plots</option>
@@ -62,7 +62,7 @@ function App() {
               <select
                 onChange={(e) => setSelectBlock(e.target.value)}
                 value={selectBlock}
-                className="bg-gray-50 border-blue-700 border"
+                className="bg-gray-50 border-blue-700 border w-1/2 md:w-52 rounded-r-md md:mt-0 mt-3 md:rounded-r-none mb-5 md:mb-0 p-3 md:p-0 "
               >
                 {block.map((e) => (
                   <option>{e}</option>
@@ -70,7 +70,7 @@ function App() {
               </select>
 
               <button
-                className="bg-blue-700 text-white p-3 rounded-r-md w-full lg:w-1/4 font-bold hover:bg-blue-800 duration-500 flex items-center gap-2 justify-center"
+                className="bg-blue-700 text-white p-3 rounded-r-md w-full lg:w-1/4 font-bold hover:bg-blue-800 duration-500 flex items-center gap-2 justify-center rounded-l-md md:rounded-l-none"
                 onClick={onSearch}
               >
                 SEARCH
@@ -93,7 +93,7 @@ function App() {
           </div>
         </div>
 
-        <div className="mt-5 w-1/2 p-10 flex items-center">
+        <div className="mt-5 md:w-1/2 md:p-10 p-2 flex items-center">
           {plot.map((e) => (
             <div className="bg-white mb-2 rounded-md shadow-lg p-5 justify-between w-full">
               <div className="flex justify-between items-baseline">
