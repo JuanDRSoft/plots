@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import { commercialPlotsData, residentialPlotsData } from "../data";
+// import { commercialPlotsData, residentialPlotsData } from "../data";
 import Fondo from "../src/img/fondo.png";
+import ModalLogin from "./components/modalLogin";
+import axios from "axios";
+import { pass } from "./utils/data";
+import ModalEditar from "./components/ModalEditar";
 
 export const block = ["Exective Block", "Block A", "Block B", "Block C"];
 
@@ -12,6 +16,49 @@ function App() {
   const [selectBlock, setSelectBlock] = useState("Exective Block");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [log, setLog] = useState(false);
+  const [id, setId] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token == pass) {
+      setLog(true);
+    }
+
+    const getPlot = async () => {
+      setLoading(true);
+      try {
+        const { data } = await axios.get(
+          "https://plots-n18l.onrender.com/api/plot"
+        );
+
+        setResidentialPlots(data);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getPlot();
+
+    const getPlotC = async () => {
+      setLoading(true);
+      try {
+        const { data } = await axios.get(
+          "https://plots-n18l.onrender.com/api/plotCommercial"
+        );
+
+        setCommercialPlots(data);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getPlotC();
+  }, []);
 
   const onSearch = () => {
     if ([search, select].includes("")) {
@@ -19,25 +66,54 @@ function App() {
     }
 
     if (select === "Residential Plots") {
-      const filter = residentialPlotsData.filter(
+      const filter = residentialPlots.filter(
         (e) => e.plotNo == search && e.block.includes(selectBlock)
       );
       setPlot(filter);
     }
 
     if (select === "Commercial Plots") {
-      const filter = commercialPlotsData.filter(
+      const filter = commercialPlots.filter(
         (e) => e.plotNo == search && e.block.includes(selectBlock)
       );
       setPlot(filter);
     }
   };
 
+  const openModal = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const openModalEdit = (id) => {
+    setIsOpenEdit(!isOpenEdit);
+    setId(id);
+  };
+
+  const nulls = "";
+
   return (
     <div className="w-full h-full">
-      <img src={Fondo} class="fixed -z-10 md:w-full w-screen h-screen top-0" />
+      <img
+        src={Fondo}
+        className="fixed -z-10 md:w-full w-screen h-screen top-0"
+      />
       <div className="md:flex">
         <div className="bg-glass md:p-10 rounded-md shadow  md:w-1/2 md:h-screen md:flex items-center">
+          {log ? (
+            <button
+              className="absolute top-5 bg-blue-700 text-white font-semibold p-1 rounded-md"
+              onClick={() => openModalEdit(nulls)}
+            >
+              Add Plot
+            </button>
+          ) : (
+            <button
+              className="absolute top-5 bg-blue-700 text-white font-semibold p-1 rounded-md"
+              onClick={openModal}
+            >
+              Iniciar Sesión
+            </button>
+          )}
           <div className="w-full justify-center">
             <h1 className="text-7xl md:mb-24 font-semibold text-center mb-10 pt-10 md:pt-0">
               Find Your Plot
@@ -70,24 +146,44 @@ function App() {
               </select>
 
               <button
-                className="bg-blue-700 text-white p-3 rounded-r-md w-full lg:w-1/4 font-bold hover:bg-blue-800 duration-500 flex items-center gap-2 justify-center rounded-l-md md:rounded-l-none"
+                className="bg-blue-700 text-white p-3 rounded-r-md w-full lg:w-1/4 font-bold hover:bg-blue-800 duration-500 flex items-center gap-2 justify-center rounded-l-md md:rounded-l-none disabled:bg-blue-300"
                 onClick={onSearch}
+                disabled={loading}
               >
-                SEARCH
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                  />
-                </svg>
+                {loading ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6 animate-spin"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                    />
+                  </svg>
+                ) : (
+                  <>
+                    SEARCH
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                      />
+                    </svg>
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -144,10 +240,34 @@ function App() {
                   </span>
                 </p>
               </div>
+
+              {log ? (
+                <div className="flex items-center gap-4">
+                  <button
+                    className="bg-blue-600 text-white w-full font-semibold uppercase p-1 rounded-md"
+                    onClick={() => openModalEdit(e._id)}
+                  >
+                    Editar
+                  </button>
+                  <button className="bg-red-600 text-white w-full font-semibold uppercase p-1 rounded-md">
+                    Eliminar
+                  </button>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           ))}
         </div>
       </div>
+
+      <ModalLogin isOpen={isOpen} openModal={openModal} />
+      <ModalEditar
+        isOpenEdit={isOpenEdit}
+        setIsOpenEdit={setIsOpenEdit}
+        id={id}
+        setId={setId}
+      />
     </div>
   );
 }
