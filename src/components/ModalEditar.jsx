@@ -1,9 +1,16 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import { pass } from "../utils/data";
+import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 
-export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
+export default function ModalEditar({
+  isOpenEdit,
+  id,
+  setIsOpenEdit,
+  setId,
+  select,
+  plot,
+  setPlot,
+}) {
   const [plotNo, setPlotNo] = useState("");
   const [block, setBlock] = useState("");
   const [typeBlock, setTypeBlock] = useState("plot");
@@ -15,8 +22,31 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
   const [streetNo, setStreetNo] = useState("");
   const [mainDoubleRain, setMainDoubleRain] = useState("");
 
-  const edit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (id) {
+      const getID = async () => {
+        const { data } = await axios.get(
+          `https://plots-n18l.onrender.com/api/${select}/${id}`
+        );
+
+        setTypeBlock(select);
+        setPlotNo(data.plotNo);
+        setBlock(data.block);
+        setExtraLand(data.extraLand);
+        setCorner(data.corner);
+        setMarlas(data.marlas);
+        setFilling(data.filling);
+        setStreetNo(data.streetNo);
+        setMainDoubleRain(data.mainDoubleRain);
+        setSize(data.size);
+      };
+
+      getID();
+    }
+  }, [id]);
+
+  const edit = async (event) => {
+    event.preventDefault();
     try {
       const { data } = await axios.put(
         `https://plots-n18l.onrender.com/api/${typeBlock}/${id}`,
@@ -34,6 +64,10 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
       );
 
       console.log(data);
+      const events = plot.map((eventState) =>
+        eventState._id === data._id ? data : eventState
+      );
+      setPlot(events);
       closeModal();
 
       setPlotNo("");
@@ -44,13 +78,14 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
       setFilling("");
       setStreetNo("");
       setMainDoubleRain("");
+      setSize("");
     } catch (error) {
       console.log(error);
     }
   };
 
-  const create = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
       const { data } = await axios.post(
         `https://plots-n18l.onrender.com/api/${typeBlock}`,
@@ -68,6 +103,7 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
       );
 
       console.log(data);
+      setPlot([...plot, data]);
       closeModal();
 
       setPlotNo("");
@@ -78,6 +114,7 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
       setFilling("");
       setStreetNo("");
       setMainDoubleRain("");
+      setSize("");
     } catch (error) {
       console.log(error);
     }
@@ -86,14 +123,6 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
   const closeModal = () => {
     setIsOpenEdit(!isOpenEdit);
     setId("");
-  };
-
-  const handleSubmit = async () => {
-    if (id) {
-      await edit();
-    } else {
-      await create();
-    }
   };
 
   return (
@@ -131,11 +160,12 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
                     {id ? "Edit" : "Crear"}
                   </Dialog.Title>
                   <div className="mt-4">
-                    <form onSubmit={handleSubmit}>
+                    <form>
                       <label className="w-full">Type Plot</label>
 
                       <select
                         className="w-full mt-2 border border-gray-200 mb-2"
+                        value={typeBlock}
                         onChange={(e) => setTypeBlock(e.target.value)}
                       >
                         <option value="plot">Residential Plots</option>
@@ -146,6 +176,7 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
 
                       <input
                         className="w-full mt-2 border border-gray-200 mb-2"
+                        value={plotNo}
                         onChange={(e) => setPlotNo(e.target.value)}
                       />
 
@@ -153,6 +184,7 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
 
                       <select
                         className="w-full mt-2 border border-gray-200 mb-2"
+                        value={block}
                         onChange={(e) => setBlock(e.target.value)}
                       >
                         <option>Excetive Block</option>
@@ -165,18 +197,21 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
                       <input
                         className="w-full mt-2 border border-gray-200 mb-2"
                         onChange={(e) => setExtraLand(e.target.value)}
+                        value={extraLand}
                       />
                       <label className="w-full">Corner</label>
 
                       <input
                         className="w-full mt-2 border border-gray-200 mb-2"
                         onChange={(e) => setCorner(e.target.value)}
+                        value={corner}
                       />
 
                       <label className="w-full">Marlas</label>
 
                       <input
                         className="w-full mt-2 border border-gray-200 mb-2"
+                        value={marlas}
                         onChange={(e) => setMarlas(e.target.value)}
                       />
 
@@ -184,6 +219,7 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
 
                       <input
                         className="w-full mt-2 border border-gray-200 mb-2"
+                        value={mainDoubleRain}
                         onChange={(e) => setMainDoubleRain(e.target.value)}
                       />
 
@@ -191,6 +227,7 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
 
                       <input
                         className="w-full mt-2 border border-gray-200 mb-2"
+                        value={filling}
                         onChange={(e) => setFilling(e.target.value)}
                       />
 
@@ -198,6 +235,7 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
 
                       <input
                         className="w-full mt-2 border border-gray-200 mb-2"
+                        value={streetNo}
                         onChange={(e) => setStreetNo(e.target.value)}
                       />
 
@@ -205,14 +243,27 @@ export default function ModalEditar({ isOpenEdit, id, setIsOpenEdit, setId }) {
 
                       <input
                         className="w-full mt-2 border border-gray-200 mb-2"
+                        value={size}
                         onChange={(e) => setSize(e.target.value)}
                       />
 
-                      <input
-                        type="submit"
-                        className="bg-blue-600 text-white font-semibold w-full rounded-md mt-2"
-                        value={id ? "Editar" : "Crear"}
-                      />
+                      {id ? (
+                        <button
+                          className="bg-blue-600 text-white font-semibold w-full rounded-md mt-2 cursor-pointer"
+                          type="submit"
+                          onClick={edit}
+                        >
+                          Editar
+                        </button>
+                      ) : (
+                        <button
+                          className="bg-blue-600 text-white font-semibold w-full rounded-md mt-2 cursor-pointer"
+                          type="submit"
+                          onClick={handleSubmit}
+                        >
+                          Crear
+                        </button>
+                      )}
                     </form>
                   </div>
                 </Dialog.Panel>

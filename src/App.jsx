@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import { commercialPlotsData, residentialPlotsData } from "../data";
 import Fondo from "../src/img/fondo.png";
 import ModalLogin from "./components/ModalLogin";
 import axios from "axios";
@@ -12,7 +11,7 @@ function App() {
   const [residentialPlots, setResidentialPlots] = useState([]);
   const [commercialPlots, setCommercialPlots] = useState([]);
   const [plot, setPlot] = useState([]);
-  const [select, setSelect] = useState("Residential Plots");
+  const [select, setSelect] = useState("plot");
   const [selectBlock, setSelectBlock] = useState("Exective Block");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -65,14 +64,14 @@ function App() {
       return;
     }
 
-    if (select === "Residential Plots") {
+    if (select === "plot") {
       const filter = residentialPlots.filter(
         (e) => e.plotNo == search && e.block.includes(selectBlock)
       );
       setPlot(filter);
     }
 
-    if (select === "Commercial Plots") {
+    if (select === "plotCommercial") {
       const filter = commercialPlots.filter(
         (e) => e.plotNo == search && e.block.includes(selectBlock)
       );
@@ -87,6 +86,20 @@ function App() {
   const openModalEdit = (id) => {
     setIsOpenEdit(!isOpenEdit);
     setId(id);
+  };
+
+  const remove = async (id) => {
+    try {
+      const data = await axios.delete(
+        `https://plots-n18l.onrender.com/api/${select}/${id}`
+      );
+
+      const events = plot.filter((eventState) => eventState._id !== id);
+
+      setPlot(events);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const nulls = "";
@@ -115,7 +128,7 @@ function App() {
             </button>
           )}
           <div className="w-full justify-center">
-            <h1 className="text-7xl md:mb-24 font-semibold text-center mb-10 pt-10 md:pt-0">
+            <h1 className="text-7xl md:mb-24 font-semibold text-center mb-10 pt-20 md:pt-0">
               Find Your Plot
             </h1>
             <div className="md:flex justify-center md:p-0 p-5">
@@ -132,8 +145,8 @@ function App() {
                 value={select}
                 className="bg-gray-50 border-blue-700 border-t border-l border-b w-1/2 md:w-52 rounded-l-md md:mt-0 mt-3 md:rounded-l-none p-3 md:p-0"
               >
-                <option>Residential Plots</option>
-                <option>Commercial Plots</option>
+                <option value="plot">Residential Plots</option>
+                <option value="plotCommercial">Commercial Plots</option>
               </select>
               <select
                 onChange={(e) => setSelectBlock(e.target.value)}
@@ -141,7 +154,7 @@ function App() {
                 className="bg-gray-50 border-blue-700 border w-1/2 md:w-52 rounded-r-md md:mt-0 mt-3 md:rounded-r-none mb-5 md:mb-0 p-3 md:p-0 "
               >
                 {block.map((e) => (
-                  <option>{e}</option>
+                  <option key={e}>{e}</option>
                 ))}
               </select>
 
@@ -189,7 +202,7 @@ function App() {
           </div>
         </div>
 
-        <div className="mt-5 md:w-1/2 md:p-10 p-2 flex items-center">
+        <div className="mt-5 md:w-1/2 md:p-10 p-2 grid items-center">
           {plot.map((e) => (
             <div className="bg-white mb-2 rounded-md shadow-lg p-5 justify-between w-full">
               <div className="flex justify-between items-baseline">
@@ -249,7 +262,10 @@ function App() {
                   >
                     Editar
                   </button>
-                  <button className="bg-red-600 text-white w-full font-semibold uppercase p-1 rounded-md">
+                  <button
+                    className="bg-red-600 text-white w-full font-semibold uppercase p-1 rounded-md"
+                    onClick={() => remove(e._id)}
+                  >
                     Eliminar
                   </button>
                 </div>
@@ -267,6 +283,9 @@ function App() {
         setIsOpenEdit={setIsOpenEdit}
         id={id}
         setId={setId}
+        select={select}
+        plot={plot}
+        setPlot={setPlot}
       />
     </div>
   );
