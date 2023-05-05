@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 // import { commercialPlotsData, residentialPlotsData } from "../data";
 import Fondo from "../src/img/fondo.png";
-import ModalLogin from "./components/modalLogin";
+import ModalLogin from "./components/ModalLogin";
 import axios from "axios";
 import { pass } from "./utils/data";
 import ModalEditar from "./components/ModalEditar";
