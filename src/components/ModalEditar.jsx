@@ -12,7 +12,7 @@ export default function ModalEditar({
   setPlot,
 }) {
   const [plotNo, setPlotNo] = useState("");
-  const [block, setBlock] = useState("");
+  const [block, setBlock] = useState("Exective Block");
   const [typeBlock, setTypeBlock] = useState("plot");
   const [size, setSize] = useState("");
   const [extraLand, setExtraLand] = useState("");
@@ -49,7 +49,8 @@ export default function ModalEditar({
     event.preventDefault();
     try {
       const { data } = await axios.put(
-        `https://plots-n18l.onrender.com/api/${typeBlock}/${id}`,
+        // `https://plots-n18l.onrender.com/api/${typeBlock}/${id}`,
+        `https://localhost:7777/api/${typeBlock}`,
         {
           plotNo,
           block,
@@ -88,7 +89,8 @@ export default function ModalEditar({
     event.preventDefault();
     try {
       const { data } = await axios.post(
-        `https://plots-n18l.onrender.com/api/${typeBlock}`,
+        // `https://plots-n18l.onrender.com/api/${typeBlock}`,
+        `http://localhost:7777/api/${typeBlock}`,
         {
           plotNo,
           block,

@@ -66,14 +66,16 @@ function App() {
 
     if (select === "plot") {
       const filter = residentialPlots.filter(
-        (e) => e.plotNo == search && e.block.includes(selectBlock)
+        (e) =>
+          Number(e.plotNo) === Number(search) && e.block.includes(selectBlock)
       );
       setPlot(filter);
     }
 
     if (select === "plotCommercial") {
       const filter = commercialPlots.filter(
-        (e) => e.plotNo == search && e.block.includes(selectBlock)
+        (e) =>
+          Number(e.plotNo) === Number(search) && e.block.includes(selectBlock)
       );
       setPlot(filter);
     }
