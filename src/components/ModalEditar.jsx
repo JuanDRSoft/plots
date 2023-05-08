@@ -109,7 +109,7 @@ export default function ModalEditar({
       closeModal();
 
       setPlotNo("");
-      setBlock("");
+      setBlock("Exective Block");
       setExtraLand("");
       setCorner("");
       setMarlas("");
